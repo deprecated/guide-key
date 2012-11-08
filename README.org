@@ -1,7 +1,4 @@
-* guide-key.el: 自動的にキーバインドをポップアップするライブラリ
-自動的にキーバインドをポップアップするライブラリ，guide-key.el を自作したので
-紹介したいと思います．
-** 開発の動機
+* What is this?
 Emacs を利用する場合の大きな障壁の1つにキーバインドの覚えにくさがあるでしょう．
 1ストロークのキーバインドは頻繁に使いますし，まだ覚えやすいですが，2ストローク
 以上のキーは頻繁に使うものしか覚えていない，という人も多いのではないでしょうか．
@@ -15,11 +12,7 @@ Emacs を利用する場合の大きな障壁の1つにキーバインドの覚�
 的に（別ウィンドウに）表示してくれます．下図は C-x r を押した場合．
 
 #+ATTR_HTML: alt="C-x rを押した場合" title="one-key.el動作例" width=640
-# [[file:img/one-key-example.png]]
-#+BEGIN_HTML
-<a href="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-one-key-example.png">
-<img src="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-one-key-example.png" alt="C-x rを押した場合" title="one-key.el動作例" width=640></a>
-#+END_HTML
+[[file:img/one-key-example.png]]
 
 しかし one-key.el にもいくつか問題があります．
 - プレフィックスに続くキー（テンプレート）を自分で記述しないといけないません．
@@ -37,7 +30,7 @@ Emacs を利用する場合の大きな障壁の1つにキーバインドの覚�
 
 以上の問題点を解決した guide-key.el というのを作ってみました．キーマップに自
 動的に追随してくれますし，コマンドを上書きするようなこともありません．
-** guide-key.el の導入
+* guide-key.el の導入
 [[http://melpa.milkbox.net/][MELPA]] に登録しているので，package.el を使ってインストールできます．Emacs24 の
 人や package.el を自分で入れている人は init.el に
 #+BEGIN_SRC emacs-lisp
@@ -57,7 +50,7 @@ package-list-packages を実行してライブラリをリストアップし，i
 package.el がない人は [[https://github.com/m2ym/popwin-el][m2ym/popwin-el]] と [[https://github.com/kbkbkbkb1/guide-key][kbkbkbkb1/guide-key]] から popwin.elと
 guide-key.el を直接ダウンロードしてきて，適当に `load-path' が通っているところ
 に保存してください．
-** 使い方
+* 使い方
 `guide-key/guide-key-sequence' にポップアップして欲しいキーシーケンスを登録し
 ます．当然複数個登録できます．
 #+BEGIN_SRC emacs-lisp
@@ -67,11 +60,7 @@ guide-key.el を直接ダウンロードしてきて，適当に `load-path' が
 #+END_SRC
 init.el にこの設定をした後 C-x r を押すと以下のようになります．
 
-# [[file:img/guide-key-example.png]]
-#+BEGIN_HTML
-<a href="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example.png">
-<img src="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example.png" alt="C-x r を押した場合" title="guide-key.el 動作例" width=640></a>
-#+END_HTML
+[[file:img/guide-key-example.png]]
 
 guide-key は特定の正規表現に当てはまるコマンド名に色をつけることができます．
 C-x r には rectangle 系と register 系のコマンドがあります．いま rectangle 系の
@@ -81,11 +70,7 @@ C-x r には rectangle 系と register 系のコマンドがあります．い�
 #+END_SRC
 と設定しておけば，
 
-# [[file:img/guide-key-example2.png]]
-#+BEGIN_HTML
-<a href="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example2.png">
-<img src="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example2.png" alt="C-x r を押した場合" title="guide-key.el 動作例2" width=640></a>
-#+END_HTML
+[[file:img/guide-key-example2.png]]
 
 このように rectangle 系のコマンドだけが色付けされます．これでコマンドを探しや
 すくなりますし，キーバインドを覚えやすくなります．rectangle 系，register 系ど
@@ -141,11 +126,7 @@ guide-key が動作することを確認している環境は以下のように�
 この設定をした後，org-mode のバッファで C-c C-x p を順番に押して
 `org-set-property' が実行される様子がこれです．
 
-# [[file:img/guide-key-example-org-anime.gif]]
-#+BEGIN_HTML
-<a href="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example-org-anime.gif">
-<img src="http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example-org-anime.gif" alt="C-c C-x p を押した場合" title="guide-key.el 動作例3" width=640></a>
-#+END_HTML
+[[file:img/guide-key-example-org-anime.gif]]
 
 色付けするコマンドに "org-" を追加しているので，ほとんどのコマンドが色付けさ
 れています．これだとあまり意味が無いので，覚えたいコマンド群のみが色付けされ
@@ -153,11 +134,11 @@ guide-key が動作することを確認している環境は以下のように�
 
 メジャーモードでもマイナーモードでもフックさえあれば同様のことができるので，
 お好きなモードで試してみてください．
-** 内部動作                                                        :noexport:
+* 内部動作                                                         :noexport:
 #+check
 - 要はポーリング．フックはないのかね？
 - ウィンドウ操作には popwin
-** まとめ
+* まとめ
 最後に guide-key の特徴をまとめておきます．
 - 現在入力しているキーシケンスに続くキーを自動的にポップアップします．ポップアッ
   プさせたいプレフィックスを設定するだけで使えます．また動的にキーバインドを調
