@@ -58,7 +58,7 @@ guide-key.el を直接ダウンロードしてきて，適当に `load-path' が
 #+END_SRC
 init.el にこの設定をした後 C-x r を押すと以下のようになります．
 
-[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example1.png]]
+[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example.png]]
 guide-key は特定の正規表現に当てはまるコマンド名に色をつけることができます．
 C-x r には rectangle 系と register 系のコマンドがあります．いま rectangle 系の
 コマンドに色をつけて目立たせたいとすると
