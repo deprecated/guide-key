@@ -1,4 +1,5 @@
-* Overview
+* guide-key.el --- Guide following keys to an input key sequence automatically and dynamically
+** Overview
 Emacs を利用する場合の大きな障壁の1つにキーバインドの覚えにくさがあるでしょう．
 1ストロークのキーバインドは頻繁に使いますし，まだ覚えやすいですが，2ストローク
 以上のキーは頻繁に使うものしか覚えていない，という人も多いのではないでしょうか．
@@ -29,7 +30,7 @@ Emacs を利用する場合の大きな障壁の1つにキーバインドの覚�
 
 以上の問題点を解決した guide-key.el というのを作ってみました．キーマップに自
 動的に追随してくれますし，コマンドを上書きするようなこともありません．
-* Installation
+** Installation
 [[http://melpa.milkbox.net/][MELPA]] に登録しているので，package.el を使ってインストールできます．Emacs24 の
 人や package.el を自分で入れている人は init.el に
 #+BEGIN_SRC emacs-lisp
@@ -48,7 +49,7 @@ package-list-packages を実行してライブラリをリストアップし，i
 package.el がない人は [[https://github.com/m2ym/popwin-el][m2ym/popwin-el]] と [[https://github.com/kbkbkbkb1/guide-key][kbkbkbkb1/guide-key]] から popwin.elと
 guide-key.el を直接ダウンロードしてきて，適当に `load-path' が通っているところ
 に保存してください．
-* Usage
+** Usage
 `guide-key/guide-key-sequence' にポップアップして欲しいキーシーケンスを登録し
 ます．当然複数個登録できます．
 #+BEGIN_SRC emacs-lisp
@@ -100,7 +101,7 @@ guide-key が動作することを確認している環境は以下のように�
 - Emacs 22.3, Windows 7 64bit
 とにかく popwin が動けば guide-key も動作するはずです．ターミナル環境の Emacs
 でも問題なく動作します．
-** 特定のモードで設定を追加
+*** 特定のモードで設定を追加
 こういったキー入力を補助して欲しい場面は，おそらく新しく導入したモードに独自の
 キーバインドがある場合でしょう．「さっきマニュアルを見たのに，もうキーバインド
 を忘れた」ということが起きないように，以下では guide-key を使って特定のモード
@@ -131,11 +132,11 @@ guide-key が動作することを確認している環境は以下のように�
 
 メジャーモードでもマイナーモードでもフックさえあれば同様のことができるので，
 お好きなモードで試してみてください．
-* 内部動作                                                         :noexport:
+** 内部動作                                                        :noexport:
 #+check
 - 要はポーリング．フックはないのかね？
 - ウィンドウ操作には popwin
-* まとめ
+** まとめ
 最後に guide-key の特徴をまとめておきます．
 - 現在入力しているキーシケンスに続くキーを自動的にポップアップします．ポップアッ
   プさせたいプレフィックスを設定するだけで使えます．また動的にキーバインドを調
@@ -169,9 +170,3 @@ guide-key が動作することを確認している環境は以下のように�
 自分としてはキーバインドが変更されても追随するという事を最重要視して作りまし
 た．guide-key を使えばもっとキーバインドを覚えやすくなると思いますので，みな
 さんぜひ使ってみてください．
-
-#+img/one-key-example.png http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-one-key-example.png
-#+img/guide-key-example.png http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example.png
-#+img/guide-key-example2.png http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example2.png
-#+img/guide-key-package-install.png http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-package-install.png
-#+img/guide-key-example-org-anime.gif http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example-org-anime.gif
