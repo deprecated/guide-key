@@ -29,7 +29,7 @@ Emacs を利用する場合の大きな障壁の1つにキーバインドの覚�
 
 以上の問題点を解決した guide-key.el というのを作ってみました．キーマップに自
 動的に追随してくれますし，コマンドを上書きするようなこともありません．
-* Instllation
+* Installation
 [[http://melpa.milkbox.net/][MELPA]] に登録しているので，package.el を使ってインストールできます．Emacs24 の
 人や package.el を自分で入れている人は init.el に
 #+BEGIN_SRC emacs-lisp
@@ -43,8 +43,7 @@ package-list-packages を実行してライブラリをリストアップし，i
 必要があります．package.el でインストールすれば自動的に popwin もインストール
 されます．
 
-#+ATTR_HTML: alt="packageを使ってインストール" title="guide-key.elのインストール" width=640
-[[file:img/guide-key-package-install.png]]
+[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-package-install.png]]
 
 package.el がない人は [[https://github.com/m2ym/popwin-el][m2ym/popwin-el]] と [[https://github.com/kbkbkbkb1/guide-key][kbkbkbkb1/guide-key]] から popwin.elと
 guide-key.el を直接ダウンロードしてきて，適当に `load-path' が通っているところ
@@ -59,8 +58,7 @@ guide-key.el を直接ダウンロードしてきて，適当に `load-path' が
 #+END_SRC
 init.el にこの設定をした後 C-x r を押すと以下のようになります．
 
-[[file:img/guide-key-example.png]]
-
+[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example1.png]]
 guide-key は特定の正規表現に当てはまるコマンド名に色をつけることができます．
 C-x r には rectangle 系と register 系のコマンドがあります．いま rectangle 系の
 コマンドに色をつけて目立たせたいとすると
@@ -69,7 +67,7 @@ C-x r には rectangle 系と register 系のコマンドがあります．い�
 #+END_SRC
 と設定しておけば，
 
-[[file:img/guide-key-example2.png]]
+[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example2.png]]
 
 このように rectangle 系のコマンドだけが色付けされます．これでコマンドを探しや
 すくなりますし，キーバインドを覚えやすくなります．rectangle 系，register 系ど
@@ -125,7 +123,7 @@ guide-key が動作することを確認している環境は以下のように�
 この設定をした後，org-mode のバッファで C-c C-x p を順番に押して
 `org-set-property' が実行される様子がこれです．
 
-[[file:img/guide-key-example-org-anime.gif]]
+[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example-org-anime.gif]]
 
 色付けするコマンドに "org-" を追加しているので，ほとんどのコマンドが色付けさ
 れています．これだとあまり意味が無いので，覚えたいコマンド群のみが色付けされ
