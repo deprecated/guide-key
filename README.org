@@ -1,4 +1,4 @@
-* What is this?
+* Overview
 Emacs を利用する場合の大きな障壁の1つにキーバインドの覚えにくさがあるでしょう．
 1ストロークのキーバインドは頻繁に使いますし，まだ覚えやすいですが，2ストローク
 以上のキーは頻繁に使うものしか覚えていない，という人も多いのではないでしょうか．
@@ -11,8 +11,7 @@ Emacs を利用する場合の大きな障壁の1つにキーバインドの覚�
 リを使えば，プレフィックスキーを押した際に，そのプレフィックスに続くキーを自動
 的に（別ウィンドウに）表示してくれます．下図は C-x r を押した場合．
 
-#+ATTR_HTML: alt="C-x rを押した場合" title="one-key.el動作例" width=640
-[[file:img/one-key-example.png]]
+[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-one-key-example.png]]
 
 しかし one-key.el にもいくつか問題があります．
 - プレフィックスに続くキー（テンプレート）を自分で記述しないといけないません．
@@ -30,7 +29,7 @@ Emacs を利用する場合の大きな障壁の1つにキーバインドの覚�
 
 以上の問題点を解決した guide-key.el というのを作ってみました．キーマップに自
 動的に追随してくれますし，コマンドを上書きするようなこともありません．
-* guide-key.el の導入
+* Instllation
 [[http://melpa.milkbox.net/][MELPA]] に登録しているので，package.el を使ってインストールできます．Emacs24 の
 人や package.el を自分で入れている人は init.el に
 #+BEGIN_SRC emacs-lisp
@@ -50,7 +49,7 @@ package-list-packages を実行してライブラリをリストアップし，i
 package.el がない人は [[https://github.com/m2ym/popwin-el][m2ym/popwin-el]] と [[https://github.com/kbkbkbkb1/guide-key][kbkbkbkb1/guide-key]] から popwin.elと
 guide-key.el を直接ダウンロードしてきて，適当に `load-path' が通っているところ
 に保存してください．
-* 使い方
+* Usage
 `guide-key/guide-key-sequence' にポップアップして欲しいキーシーケンスを登録し
 ます．当然複数個登録できます．
 #+BEGIN_SRC emacs-lisp
