@@ -1,54 +1,26 @@
 * guide-key.el --- Guide following keys to an input key sequence automatically and dynamically
 ** Overview
-Emacs を利用する場合の大きな障壁の1つにキーバインドの覚えにくさがあるでしょう．
-1ストロークのキーバインドは頻繁に使いますし，まだ覚えやすいですが，2ストローク
-以上のキーは頻繁に使うものしか覚えていない，という人も多いのではないでしょうか．
-ましてや新しく導入した外部ライブラリのキーバインドなどは覚えるのが億劫になりま
-す．Emacs には標準で `describe-key' や `describe-bindings' などキーバインドを
-調べる機能もありますが，必ずしも使いやすくありませんし，能動的にコマンドを実行
-しないといけません．
+guide-key.el enables to guide following keys to an input key sequence.
+guide-key aims to be an alternative of [[http://emacswiki.org/emacs/one-key.el][one-key.el]].
 
-この問題を解決する外部ライブラリとして有名なのが [[http://emacswiki.org/emacs/one-key.el][one-key.el]] です．このライブラ
-リを使えば，プレフィックスキーを押した際に，そのプレフィックスに続くキーを自動
-的に（別ウィンドウに）表示してくれます．下図は C-x r を押した場合．
-
-[[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-one-key-example.png]]
-
-しかし one-key.el にもいくつか問題があります．
-- プレフィックスに続くキー（テンプレート）を自分で記述しないといけないません．
-  主要なプレフィックスキーのテンプレートはあらかじめ用意してありますが，自分で
-  書く場合は手間がかかります．その手間を軽減してくれるジェネレータを
-  rubikitch さんが[[http://d.hatena.ne.jp/rubikitch/20090127/onekey][こちら]]で書いてくれていますが，やはりめんどくさい．
-- キーマップのキーバインドを変更した場合，テンプレートの方も手動で変更しなけれ
-  ばなりません．テンプレートが自動的にキーマップに追随してくれたらいいのに．
-- one-key.el はプレフィックスキーに割り当ててあるコマンドを置き換えます．つま
-  りデフォルトでは C-x r に割り当てられている ctl-x-r-prefix を上書きしてしま
-  うのでいろいろ問題が出てきます．例えば `describe-key' で C-x r t に割り当て
-  られているコマンドを調べようとすると，C-x r に割り当てられている one-key の
-  コマンドが先に出てきてしまい，直接 C-x r t を調べることができなくなってしま
-  います．
-
-以上の問題点を解決した guide-key.el というのを作ってみました．キーマップに自
-動的に追随してくれますし，コマンドを上書きするようなこともありません．
+Here are some features of this library.
+- guide-key automatically pop up a window containing following keys to your
+  favorite prefixes. Moreover, even if you change key bindings, guide-key
+  follow its change dynamically.
+- guide-key can highlight particular commands. It makes it easy to find a command
+  you are looking for, and to learn its key binding.
+- guide-key doesn't overwrite existing commands and key bindings. So, there
+  is no bad effect on using `describe-key' and `describe-bindings'.
 ** Installation
-[[http://melpa.milkbox.net/][MELPA]] に登録しているので，package.el を使ってインストールできます．Emacs24 の
-人や package.el を自分で入れている人は init.el に
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-#+END_SRC
-と設定すると，MELPA に登録されているライブラリ群を見ることができます．M-x
-package-list-packages を実行してライブラリをリストアップし，i で guide-key を
-選択，x で実行することにより guide-key がインストールされます．guide-key はウィ
-ンドウの操作を全部 [[https://github.com/m2ym/popwin-el][popwin.el]] に任せているので，popwin がインストールされている
-必要があります．package.el でインストールすれば自動的に popwin もインストール
-されます．
+I added guide-key to [[http://melpa.milkbox.net/][MELPA]]. You can install guide-key with package.el,
 
 [[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-package-install.png]]
 
-package.el がない人は [[https://github.com/m2ym/popwin-el][m2ym/popwin-el]] と [[https://github.com/kbkbkbkb1/guide-key][kbkbkbkb1/guide-key]] から popwin.elと
-guide-key.el を直接ダウンロードしてきて，適当に `load-path' が通っているところ
-に保存してください．
+Because guide-key depends on [[https://github.com/m2ym/popwin-el][popwin.el]], popwin.el is installed at a time.
+
+If you don't have package.el, Please download popwin.el and guide-key.el
+directly from [[https://github.com/m2ym/popwin-el][m2ym/popwin-el]] and [[https://github.com/kbkbkbkb1/guide-key][kbkbkbkb1/guide-key]], and then put them in
+`load-path'.
 ** Usage
 `guide-key/guide-key-sequence' にポップアップして欲しいキーシーケンスを登録し
 ます．当然複数個登録できます．
@@ -137,16 +109,6 @@ guide-key が動作することを確認している環境は以下のように�
 - 要はポーリング．フックはないのかね？
 - ウィンドウ操作には popwin
 ** まとめ
-最後に guide-key の特徴をまとめておきます．
-- 現在入力しているキーシケンスに続くキーを自動的にポップアップします．ポップアッ
-  プさせたいプレフィックスを設定するだけで使えます．また動的にキーバインドを調
-  べているので，キーバインドが変更されても自動的に追随できます．
-- 特定のコマンドを色付けすることできます．いま注目している機能に関するコマンド
-  だけを色付けすることにより，キーバインドを探しやすくなり体で覚えることがで
-  きます．
-- 既存のコマンドを上書きしないので，`describe-key' や `describe-bindings' な
-  どに影響が出ません．
-
 既知の問題点，欠点には以下のようなものがあります．
 - guide-key は次に続くキーバインドをすべて表示しようとするので，ポップアップウィ
   ンドウのサイズが大きくなりがちです．もし現在のフレームの大きさよりポップアッ
@@ -166,7 +128,3 @@ guide-key が動作することを確認している環境は以下のように�
   これは手動でテンプレートを作っているからこその利点です．guide-key では動的に
   キーバインドからコマンドを抽出してくるので，コマンド名しか表示させることが
   できません．
-
-自分としてはキーバインドが変更されても追随するという事を最重要視して作りまし
-た．guide-key を使えばもっとキーバインドを覚えやすくなると思いますので，みな
-さんぜひ使ってみてください．
