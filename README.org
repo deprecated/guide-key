@@ -1,14 +1,14 @@
-* guide-key.el --- Guide following keys to an input key sequence automatically and dynamically
+* guide-key.el --- Guide the following key bindings automatically and dynamically
 ** Overview
-guide-key.el enables to guide following keys to an input key sequence.
-guide-key aims to be an alternative of [[http://emacswiki.org/emacs/one-key.el][one-key.el]].
+guide-key.el enables to guide the following key bindings automatically and
+dynamically. guide-key aims to be an alternative of [[http://emacswiki.org/emacs/one-key.el][one-key.el]].
 
 Here are some features of this library.
-- guide-key automatically pop up a window containing following keys to your
-  favorite prefixes. Moreover, even if you change key bindings, guide-key
-  follow its change dynamically.
-- guide-key can highlight particular commands. It makes it easy to find a command
-  you are looking for, and to learn its key binding.
+- guide-key automatically pop up the keys following your favorite
+  prefixes. Moreover, even if you change key bindings, guide-key follows its
+  change dynamically.
+- guide-key can highlight particular commands. This makes it easy to find a
+  command you are looking for, and to learn its key binding.
 - guide-key doesn't overwrite existing commands and key bindings. So, there
   is no bad effect on using `describe-key' and `describe-bindings'.
 ** Installation
@@ -16,63 +16,60 @@ I added guide-key to [[http://melpa.milkbox.net/][MELPA]]. You can install guide
 
 [[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-package-install.png]]
 
-Because guide-key depends on [[https://github.com/m2ym/popwin-el][popwin.el]], popwin.el is installed at a time.
+Because guide-key depends on [[https://github.com/m2ym/popwin-el][popwin.el]], popwin.el is also installed at a
+time.
 
-If you don't have package.el, Please download popwin.el and guide-key.el
+If you don't have package.el, please download popwin.el and guide-key.el
 directly from [[https://github.com/m2ym/popwin-el][m2ym/popwin-el]] and [[https://github.com/kbkbkbkb1/guide-key][kbkbkbkb1/guide-key]], and then put them in
-`load-path'.
+your `load-path'.
 ** Usage
-`guide-key/guide-key-sequence' にポップアップして欲しいキーシーケンスを登録し
-ます．当然複数個登録できます．
+You just add your favorite prefix keys to `guide-key/guide-key-sequence' as
+below.
 #+BEGIN_SRC emacs-lisp
 (require 'guide-key)
 (setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
-(guide-key-mode 1)  ; guide-key-mode を有効にする
+(guide-key-mode 1)  ; Enable guide-key-mode
 #+END_SRC
-init.el にこの設定をした後 C-x r を押すと以下のようになります．
+When you press these prefix keys, key bindings are automatically popped up.
+This is a screenshot when you press C-x r.
 
 [[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example.png]]
-guide-key は特定の正規表現に当てはまるコマンド名に色をつけることができます．
-C-x r には rectangle 系と register 系のコマンドがあります．いま rectangle 系の
-コマンドに色をつけて目立たせたいとすると
+
+guide-key can highlight commands which matches a certain regular expression.
+Key bindings following C-x r are rectangle family and register family.
+If you want to highlight only rectangle family commands, put this setting
+in your init.el.
 #+BEGIN_SRC emacs-lisp
 (setq guide-key/highlight-command-regexp "rectangle")
 #+END_SRC
-と設定しておけば，
 
 [[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example2.png]]
 
-このように rectangle 系のコマンドだけが色付けされます．これでコマンドを探しや
-すくなりますし，キーバインドを覚えやすくなります．rectangle 系，register 系ど
-ちらも色付けしたければ
+This feature makes you to find commands and learn their key bindings. If
+you want to highlight rectangle family and register family, set an
+adequate regular expression like this.
 #+BEGIN_SRC emacs-lisp
 (setq guide-key/highlight-command-regexp "rectangle\\|register")
 #+END_SRC
-のように，適当に正規表現を設定してください．またプレフィックスキー（"prefix"
-という正規表現に一致するコマンド）にも自動的に色付けがされます．
+Moreove, prefix commands are automatically highlighted.
 
-guide-key の基本的な動作は以上ですが，動作を制御する変数などを説明しておきま
-す．
-- *(guide-key-mode ARG)*: guide-key-mode はマイナーモードで実装されています．
-  対話的に実行すればトグル動作になるので，一時的に有効無効を切り替える場合は
-  M-x guide-key-mode を実行してください．グローバルマイナーモードなので，特定
-  のバッファのみで有効にする，といったような動作はできません．全バッファ共通で
-  有効か無効かのどちらかです．
-- *guide-key/popup-window-position*: ポップアップするウィンドウの位置を制御す
-  る変数です．right, bottom, left, top のいずれかを指定してください．デフォル
-  トは right です．
-- *guide-key/polling-time*: 入力されているキーシーケンスをポーリングする間隔を
-  制御する変数です．デフォルトは0.1です（秒単位）．キーを押してすぐさまポップ
-  アップされるのが嫌な場合は長くするといいでしょう．おそらく0.1でもほぼ一瞬で
-  表示されるように感じると思います．0.01ぐらい短くしてもきちんと動作し，他の操
-  作にも影響が無いことを確認していますが，0.1で大多数の人は問題ないと思います．
+Here are some functions and variables which control guide-key.
+- *(guide-key-mode ARG)* :: guide-key-mode is implemented as a minor mode.
+     Excuting M-x guide-key-mode toggles whether guide-key is enable or not.
+     Because guide-key-mode is a global minor mode, guide-key-mode is enable
+     in all buffers or disable in all buffers.
+- *guide-key/popup-window-position* :: This variable controls where a guide-key
+     buffer is poppoed up. A value of this variable is one of ~right~, ~bottom~,
+     ~left~, ~top~. The default value is ~right~.
+- *guide-key/polling-time* :: This variable controls a polling time. The
+     default value is 0.1 (unit is second).
 
-guide-key が動作することを確認している環境は以下のようになります．
+I've confirmed that guide-key works well in these environments.
 - Emacs 24.2, Ubuntu 12.04 or Windows 7 64bit
 - Emacs 23.3, Ubuntu 12.04 or Windows 7 64bit
 - Emacs 22.3, Windows 7 64bit
-とにかく popwin が動けば guide-key も動作するはずです．ターミナル環境の Emacs
-でも問題なく動作します．
+If popwin works good, I think guide-key also works good. You can use
+guide-key with Emacs working in terminal.
 *** 特定のモードで設定を追加
 こういったキー入力を補助して欲しい場面は，おそらく新しく導入したモードに独自の
 キーバインドがある場合でしょう．「さっきマニュアルを見たのに，もうキーバインド

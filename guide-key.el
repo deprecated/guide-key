@@ -1,4 +1,4 @@
-;;; guide-key.el --- Guide following keys to an input key sequence automatically and dynamically
+;;; guide-key.el --- Guide the following key bindings automatically and dynamically
 
 ;; Copyright (C) 2012 Tsunenobu Kai
 
