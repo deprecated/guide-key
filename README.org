@@ -51,17 +51,17 @@ adequate regular expression like this.
 #+BEGIN_SRC emacs-lisp
 (setq guide-key/highlight-command-regexp "rectangle\\|register")
 #+END_SRC
-Moreove, prefix commands are automatically highlighted.
+Moreover, prefix commands are automatically highlighted.
 
 Here are some functions and variables which control guide-key.
-- *(guide-key-mode ARG)* :: guide-key-mode is implemented as a minor mode.
+- *(guide-key-mode ARG)*: guide-key-mode is implemented as a minor mode.
      Excuting M-x guide-key-mode toggles whether guide-key is enable or not.
      Because guide-key-mode is a global minor mode, guide-key-mode is enable
      in all buffers or disable in all buffers.
-- *guide-key/popup-window-position* :: This variable controls where a guide-key
+- *guide-key/popup-window-position*: This variable controls where a guide-key
      buffer is poppoed up. A value of this variable is one of ~right~, ~bottom~,
      ~left~, ~top~. The default value is ~right~.
-- *guide-key/polling-time* :: This variable controls a polling time. The
+- *guide-key/polling-time*: This variable controls a polling time. The
      default value is 0.1 (unit is second).
 
 I've confirmed that guide-key works well in these environments.
