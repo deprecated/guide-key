@@ -70,58 +70,34 @@ I've confirmed that guide-key works well in these environments.
 - Emacs 22.3, Windows 7 64bit
 If popwin works good, I think guide-key also works good. You can use
 guide-key with Emacs working in terminal.
-*** 特定のモードで設定を追加
-こういったキー入力を補助して欲しい場面は，おそらく新しく導入したモードに独自の
-キーバインドがある場合でしょう．「さっきマニュアルを見たのに，もうキーバインド
-を忘れた」ということが起きないように，以下では guide-key を使って特定のモード
-に対して設定を追加します．
+*** Add settings in a particular mode
+You can add extra settings in a particular mode. Please use
+`guide-key/add-local-guide-key-sequence',
+`guide-key/add-local-highlight-command-regexp' and hook of
+a particular mode.
 
-`guide-key/add-local-guide-key-sequence' と
-`guide-key/add-local-highlight-command-regexp' を使うと現在のバッファの変数の
-みを変更できます．これを特定のモードのフックと組み合わせれば，特定のモードに
-対して設定を追加できます．
-
-例えば org-mode を例にとって見ると，以下のような設定になります．
+This code is a example of org-mode.
 #+BEGIN_SRC emacs-lisp
 (defun guide-key/my-hook-function-for-org-mode ()
   (guide-key/add-local-guide-key-sequence "C-c")
   (guide-key/add-local-guide-key-sequence "C-c C-x")
-  (guide-key/add-local-guide-key-sequence "C-c C-v")
   (guide-key/add-local-highlight-command-regexp "org-"))
 (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
 #+END_SRC
-この設定をした後，org-mode のバッファで C-c C-x p を順番に押して
-`org-set-property' が実行される様子がこれです．
+If you execute `org-set-property' by pressing C-c C-x p in org-mode buffer,
+emacs behaves as below.
 
 [[http://www.kaichan.mydns.jp/~kai/wordpress/wp-content/uploads/2012/11/wpid-guide-key-example-org-anime.gif]]
-
-色付けするコマンドに "org-" を追加しているので，ほとんどのコマンドが色付けさ
-れています．これだとあまり意味が無いので，覚えたいコマンド群のみが色付けされ
-るような正規表現（例えば "org-clock-" など）に好みで変えてください．
-
-メジャーモードでもマイナーモードでもフックさえあれば同様のことができるので，
-お好きなモードで試してみてください．
-** 内部動作                                                        :noexport:
-#+check
-- 要はポーリング．フックはないのかね？
-- ウィンドウ操作には popwin
-** まとめ
-既知の問題点，欠点には以下のようなものがあります．
-- guide-key は次に続くキーバインドをすべて表示しようとするので，ポップアップウィ
-  ンドウのサイズが大きくなりがちです．もし現在のフレームの大きさよりポップアッ
-  プウィンドウの方が大きくなると，正常にポップアップされなくなります．なのでキー
-  バインドの多い "C-x" などをポップアップさせるのは，全くの初心者の人以外はあ
-  まりお勧めしません．将来的には，ポップアップするコマンドの方を個数や正規表現
-  で制限する機能を追加するかもしれません．
-- またポップアップされるキーバインドが多すぎると，目視で目的のコマンドを探すこ
-  とが難しくなります．ポップアップされるコマンドの個数，あるいは色付けされたコ
-  マンドの個数が数個〜十数個ぐらいになるのが理想的かと思います．
-- キーバインドをポップアップさせようとした時，一瞬ポップアップされて一瞬で閉じ
-  てしまうことがあります．popwin で制御されているウィンドウ（デフォルトだと
-  Help バッファや Apropos バッファなど）を閉じた直後に起こることが多いですが，
-  他の場面でもたまにあります．そういうときは C-g を連打したり，他のコマンドを
-  実行して仕切りなおしてからもう一回プレフィックスキーを入力してみてください．
-- one-key ではコマンド名の代わりに，短い説明文字列を表示させることが出来ました．
-  これは手動でテンプレートを作っているからこその利点です．guide-key では動的に
-  キーバインドからコマンドを抽出してくるので，コマンド名しか表示させることが
-  できません．
+** Known issues
+Here are some issues and drawbacks.
+- Because guide-key tries to pop up all keybidings, a size of popup window
+  tends to be big. If the popup window is bigger than the current frame,
+  guide-key cannot pop up normally. I recommend you not to add a prefix which
+  has many key bindings like C-x.
+- A popup window sometimes closes immediately. It tends to happen right after
+  a window controlled by popwin.el closes. In that case, please retry after
+  you type C-g a couple of times.
+- one-key can display a short description instead of its command name.  This
+  is an advantage to creating template manually. In contrast, because
+  guide-key extracts key bindings dynamically, guide-key can display nothing
+  except a command name.
