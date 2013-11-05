@@ -160,6 +160,11 @@ are allowed."
   :type 'float
   :group 'guide-key)
 
+(defcustom guide-key/popup-delay 1.0
+  "*Delay in seconds before guide buffer is displayed."
+  :type 'float
+  :group 'guide-key)
+
 (defcustom guide-key/highlight-prefix-regexp "prefix"
   "*Regexp for prefix commands."
   :type 'regexp
@@ -244,25 +249,30 @@ positive, otherwise disable."
                'guide-key/turn-on-timer
              'guide-key/turn-off-timer)))
 
+(defun guide-key/popup-function (key-seq)
+  "Popup function called after delay of `guide-key/popup-delay' second."
+  (when (guide-key/update-guide-buffer-p key-seq)
+    (let ((dsc-buf (current-buffer))
+	  (hi-regexp guide-key/highlight-command-regexp)
+	  (max-width 0))
+      (with-current-buffer (get-buffer-create guide-key/guide-buffer-name)
+	(unless truncate-lines (setq truncate-lines t))   ; don't fold line
+	(when indent-tabs-mode (setq indent-tabs-mode nil)) ; don't use tab as white space
+	(setq mode-line-format nil)
+	(text-scale-set -2)
+	(erase-buffer)
+	(describe-buffer-bindings dsc-buf key-seq)
+	(when (> (guide-key/format-guide-buffer key-seq hi-regexp) 0)
+	  (guide-key/close-guide-buffer)
+	  (guide-key/popup-guide-buffer)))))
+  )
+
 ;;; internal functions
 (defun guide-key/polling-function ()
   "Polling function executed every `guide-key/polling-time' second."
   (let ((key-seq (this-command-keys-vector)))
     (if (guide-key/popup-guide-buffer-p key-seq)
-        (when (guide-key/update-guide-buffer-p key-seq)
-          (let ((dsc-buf (current-buffer))
-                (hi-regexp guide-key/highlight-command-regexp)
-                (max-width 0))
-            (with-current-buffer (get-buffer-create guide-key/guide-buffer-name)
-              (unless truncate-lines (setq truncate-lines t))   ; don't fold line
-              (when indent-tabs-mode (setq indent-tabs-mode nil)) ; don't use tab as white space
-	      (setq mode-line-format nil)
-	      (text-scale-set -2)
-              (erase-buffer)
-              (describe-buffer-bindings dsc-buf key-seq)
-              (when (> (guide-key/format-guide-buffer key-seq hi-regexp) 0)
-                (guide-key/close-guide-buffer)
-                (guide-key/popup-guide-buffer)))))
+	(run-at-time guide-key/popup-delay nil 'guide-key/popup-function key-seq)
       (guide-key/close-guide-buffer))
     (setq guide-key/last-key-sequence-vector key-seq)))
 
