@@ -256,6 +256,8 @@ positive, otherwise disable."
             (with-current-buffer (get-buffer-create guide-key/guide-buffer-name)
               (unless truncate-lines (setq truncate-lines t))   ; don't fold line
               (when indent-tabs-mode (setq indent-tabs-mode nil)) ; don't use tab as white space
+	      (setq mode-line-format nil)
+	      (text-scale-set -2)
               (erase-buffer)
               (describe-buffer-bindings dsc-buf key-seq)
               (when (> (guide-key/format-guide-buffer key-seq hi-regexp) 0)
@@ -316,6 +318,11 @@ For example, both \"C-x r\" and \"\\C-xr\" are converted to [24 114]"
   (cancel-timer guide-key/polling-timer)
   (setq guide-key/polling-timer nil))
 
+(defun guide-key/true-window-body-width ()
+  "Return width of window, in true characters, including text-scale adjustments"
+  (floor (/ (window-body-width) (expt text-scale-mode-step text-scale-mode-amount)))
+  )
+
 (defun guide-key/format-guide-buffer (key-seq hi-regexp)
   "Format guide buffer. This function returns the number of following keys."
   (let ((fkey-list nil)      ; list of (following-key space command)
@@ -340,9 +347,9 @@ For example, both \"C-x r\" and \"\\C-xr\" are converted to [24 114]"
              (guide-key/insert-following-key
               fkey-str-list (1+ (/ (length fkey-str-list) (1- (frame-height))))))
             ((popwin:position-vertical-p guide-key/popup-window-position)
-             (guide-key/insert-following-key  ; caluculation of second argument is rough
-              fkey-str-list (/ (frame-width)
-                                (apply 'max (mapcar 'length fkey-str-list))))))
+             (guide-key/insert-following-key  ; calculation of second argument is rough
+              fkey-str-list (/ (guide-key/true-window-body-width)
+			       (apply 'max (mapcar 'length fkey-str-list))))))
       (align-regexp (point-min) (point-max) "\\(\\s-*\\) \\[" 1 1 t)
       (goto-char (point-min)))
     fkey-list-len))
