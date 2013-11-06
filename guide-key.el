@@ -160,7 +160,7 @@ are allowed."
   :type 'float
   :group 'guide-key)
 
-(defcustom guide-key/popup-delay 1.0
+(defcustom guide-key/idle-delay 0.5
   "*Delay in seconds before guide buffer is displayed."
   :type 'float
   :group 'guide-key)
@@ -222,6 +222,9 @@ any other prefixes following \"C-x\"."
 (defvar guide-key/polling-timer nil
   "Polling timer to check an input key sequence.")
 
+(defvar guide-key/idle-timer nil
+  "Idle timer to wait before popping up guide buffer.")
+
 (defvar guide-key/guide-buffer-name " *guide-key*"
   "Buffer name of guide buffer.")
 
@@ -249,9 +252,9 @@ positive, otherwise disable."
                'guide-key/turn-on-timer
              'guide-key/turn-off-timer)))
 
-(defun guide-key/popup-function (key-seq)
-  "Popup function called after delay of `guide-key/popup-delay' second."
-  (when (guide-key/update-guide-buffer-p key-seq)
+(defun guide-key/popup-function ()
+  "Popup function called after delay of `guide-key/idle-delay' second."
+  (let ((key-seq (this-command-keys-vector)))
     (let ((dsc-buf (current-buffer))
 	  (hi-regexp guide-key/highlight-command-regexp)
 	  (max-width 0))
@@ -264,15 +267,17 @@ positive, otherwise disable."
 	(describe-buffer-bindings dsc-buf key-seq)
 	(when (> (guide-key/format-guide-buffer key-seq hi-regexp) 0)
 	  (guide-key/close-guide-buffer)
-	  (guide-key/popup-guide-buffer)))))
-  )
+	  (guide-key/popup-guide-buffer))))))
+
 
 ;;; internal functions
 (defun guide-key/polling-function ()
   "Polling function executed every `guide-key/polling-time' second."
   (let ((key-seq (this-command-keys-vector)))
     (if (guide-key/popup-guide-buffer-p key-seq)
-	(run-at-time guide-key/popup-delay nil 'guide-key/popup-function key-seq)
+	(progn
+	  (when (guide-key/update-guide-buffer-p key-seq)
+	    (guide-key/turn-on-idle-timer)))
       (guide-key/close-guide-buffer))
     (setq guide-key/last-key-sequence-vector key-seq)))
 
@@ -292,7 +297,9 @@ positive, otherwise disable."
 (defun guide-key/close-guide-buffer ()
   "Close guide buffer."
   (when (eq popwin:popup-buffer (get-buffer guide-key/guide-buffer-name))
-    (popwin:close-popup-window)))
+    (popwin:close-popup-window))
+  (guide-key/turn-off-idle-timer)
+  )
 
 (add-hook 'pre-command-hook 'guide-key/close-guide-buffer)
 
@@ -316,6 +323,20 @@ positive, otherwise disable."
   "Convert key sequence KEY-SEQ to vector representation.
 For example, both \"C-x r\" and \"\\C-xr\" are converted to [24 114]"
   (vconcat (read-kbd-macro key-seq)))
+
+(defun guide-key/turn-on-idle-timer ()
+  "Turn on an idle timer for popping up guide buffer."
+  (when (null guide-key/idle-timer)
+    (setq guide-key/idle-timer
+          (run-with-idle-timer guide-key/idle-delay t 'guide-key/popup-function))
+))
+
+(defun guide-key/turn-off-idle-timer ()
+  "Turn off the idle timer."
+  (when guide-key/idle-timer
+    (cancel-timer guide-key/idle-timer))
+  (setq guide-key/idle-timer nil))
+
 
 (defun guide-key/turn-on-timer ()
   "Turn on a polling timer."
