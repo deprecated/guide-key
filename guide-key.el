@@ -140,6 +140,7 @@
   (require 'cl))
 
 (require 'popwin)
+(require 'face-remap)			; provides text-scale commands
 
 ;;; variables
 (defgroup guide-key nil
