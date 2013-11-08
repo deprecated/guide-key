@@ -195,6 +195,13 @@ any other prefixes following \"C-x\"."
   :type 'boolean
   :group 'guide-key)
 
+(defcustom guide-key/popup-buffer-hook nil
+  "*Normal hook run when guide buffer is created.
+Could be used to set the font size, etc."
+  :type 'hook
+  :group 'guide-key
+)
+
 (defface guide-key/prefix-command-face
   '((((class color) (background dark))
      (:foreground "cyan"))
@@ -262,8 +269,7 @@ positive, otherwise disable."
       (with-current-buffer (get-buffer-create guide-key/guide-buffer-name)
 	(unless truncate-lines (setq truncate-lines t))   ; don't fold line
 	(when indent-tabs-mode (setq indent-tabs-mode nil)) ; don't use tab as white space
-	(setq mode-line-format nil)
-	(text-scale-set -2)
+	(run-hooks 'guide-key/popup-buffer-hook)
 	(erase-buffer)
 	(describe-buffer-bindings dsc-buf key-seq)
 	(when (> (guide-key/format-guide-buffer key-seq hi-regexp) 0)
@@ -337,7 +343,6 @@ For example, both \"C-x r\" and \"\\C-xr\" are converted to [24 114]"
   (when guide-key/idle-timer
     (cancel-timer guide-key/idle-timer))
   (setq guide-key/idle-timer nil))
-
 
 (defun guide-key/turn-on-timer ()
   "Turn on a polling timer."
